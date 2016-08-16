@@ -6,7 +6,8 @@ import * as config from './config'
 class Compiler extends Component {
   static propTypes = {
     code: PropTypes.string.isRequired,
-    onCompile: PropTypes.func,
+    onCompile: PropTypes.func.isRequired,
+    onError: PropTypes.func,
   }
 
   componentDidMount() {
@@ -27,8 +28,9 @@ class Compiler extends Component {
   }
 
   onError = (error) => {
-    console.log('outch')
+    const { onError } = this.props
     console.log(error)
+    if (onError) onError(error)
   }
 
   evalContext = null
@@ -42,8 +44,14 @@ class Compiler extends Component {
     if (this.evalContext) {
       this.evalContext.destroy()
     }
+    
     this.evalContext = new Context(this.createSandbox())
-    this.evalContext.evaluate(code)
+
+    try {
+      this.evalContext.evaluate(code)
+    } catch(error) {
+      this.onError(error)
+    }
   }
 
   createSandbox() {
