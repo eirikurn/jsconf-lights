@@ -1,9 +1,11 @@
 import { Component, PropTypes } from 'react'
 import Context from 'context-eval'
+import { connect } from 'react-redux' 
 import Lights from './lights'
+import { newScript, syntaxErrors } from './actions'
 import * as config from './config'
 
-class Compiler extends Component {
+export class Compiler extends Component {
   static propTypes = {
     code: PropTypes.string.isRequired,
     onCompile: PropTypes.func.isRequired,
@@ -20,7 +22,7 @@ class Compiler extends Component {
 
   onRegister = (onUpdate, options) => {
     const script = {
-      fps: 50,
+      fps: 40,
       ...options,
       onUpdate,
     }
@@ -59,7 +61,6 @@ class Compiler extends Component {
       config,
       Lights,
       register: this.onRegister,
-      onerror: this.onError,
     }
   }
 
@@ -68,4 +69,14 @@ class Compiler extends Component {
   }
 }
 
-export default Compiler
+const ConnectedCompiler = connect(
+    ({ runtime: { code } }) => ({
+      code,
+    }),
+    dispatch => ({
+      onCompile: script => dispatch(newScript(script)),
+      onError: errors => dispatch(syntaxErrors([errors])),
+    })
+)(Compiler)
+
+export default ConnectedCompiler

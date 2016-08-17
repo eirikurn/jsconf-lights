@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
 import {
   Surface,
   Group,
@@ -54,7 +55,7 @@ const layout = [
   },
 ]
 
-class Vis extends Component {
+export class Vis extends Component {
   static propTypes = {
     lights: PropTypes.object,
   }
@@ -109,4 +110,10 @@ class Vis extends Component {
   }
 }
 
-export default Vis
+const ConnectedVis = connect(
+    ({ lights }) => ({
+      lights,
+    })
+)(Vis)
+
+export default ConnectedVis

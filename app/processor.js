@@ -1,10 +1,13 @@
 import { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { newLights, runtimeErrors } from './actions'
 
-class Processor extends Component {
+export class Processor extends Component {
   static propTypes = {
     script: PropTypes.object,
     lights: PropTypes.object,
     isPlaying: PropTypes.bool,
+    onError: PropTypes.func,
     onChangeLights: PropTypes.func,
   }
 
@@ -44,7 +47,7 @@ class Processor extends Component {
   }
 
   update = () => {
-    const { script, onChangeLights } = this.props
+    const { script, onChangeLights, onError } = this.props
     const now = Date.now()
     const delta = (now - this.lastUpdate) / 1000
     this.totalTime += delta
@@ -58,7 +61,7 @@ class Processor extends Component {
       )
       onChangeLights(newLights)
     } catch (error) {
-      // Handle?
+      onError(error)
       console.log(error)
     }
     this.scheduleUpdate()
@@ -74,5 +77,18 @@ class Processor extends Component {
   }
 }
 
+const ConnectedProcessor = connect(
+    ({ runtime: { script, isPlaying }, lights }) => ({
+      script,
+      isPlaying,
+      lights,
+    }),
+    dispatch => ({
+      onChangeLights: lights => dispatch(newLights(lights)),
+      onError: error => dispatch(runtimeErrors([error]))
+    }),
+    null,
+    { withRef: true }
+)(Processor)
 
-export default Processor
+export default ConnectedProcessor

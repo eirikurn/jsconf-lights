@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { newCode, dirtyCode, syntaxErrors } from './actions'
 import AceEditor from 'react-ace'
 import debounce from 'lodash/debounce'
 import 'brace'
@@ -6,12 +8,12 @@ import 'brace/mode/javascript'
 import 'brace/theme/vibrant_ink'
 import 'brace/ext/searchbox'
 
-class Editor extends Component {
+export class Editor extends Component {
   static propTypes = {
     value: PropTypes.string,
     onDirty: PropTypes.func,
     onChange: PropTypes.func,
-    onError: PropTypes.func,
+    onErrors: PropTypes.func,
   }
 
   constructor(props) {
@@ -28,16 +30,22 @@ class Editor extends Component {
   }
 
   debouncedChange = debounce(value => {
-    const { onChange, onError } = this.props
+    const { onChange, onErrors } = this.props
     const { editor } = this.refs.ace
     const errors = editor
       .getSession()
       .getAnnotations()
       .filter(annotation => annotation.type === 'error')
-      .map(annotation => ({ ...annotation }))
-    
-    if (errors.length && onError) {
-      onError(...errors)
+      .map(annotation => {
+        const error = new Error(annotation.text)
+        error.name = 'SyntaxError'
+        error.row = annotation.row
+        error.column = annotation.column
+        return error
+      })
+
+    if (errors.length && onErrors) {
+      onErrors(errors)
     } else if (errors.length === 0 && onChange) {
       onChange(value)
     }
@@ -54,17 +62,29 @@ class Editor extends Component {
     const { onChange, onDirty } = this.props
     const { value } = this.state
     return (
-        <AceEditor
-            ref="ace"
-            mode="javascript"
-            theme="vibrant_ink"
-            height="100%"
-            value={value}
-            onChange={this.onChange}
-            editorProps={{ $blockScrolling: true }}
-        />
+      <AceEditor
+          ref="ace"
+          mode="javascript"
+          theme="vibrant_ink"
+          height="100%"
+          width="100%"
+          value={value}
+          onChange={this.onChange}
+          editorProps={{ $blockScrolling: true }}
+      />
     )
   }
 }
 
-export default Editor
+const ConnectedEditor = connect(
+    ({ runtime: { code } }) => ({
+      value: code,
+    }),
+    dispatch => ({
+      onChange: code => dispatch(newCode(code)),
+      onDirty: () => dispatch(dirtyCode()),
+      onErrors: errors => dispatch(syntaxErrors(errors))
+    })
+)(Editor)
+
+export default ConnectedEditor
