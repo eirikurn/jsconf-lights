@@ -1,9 +1,4 @@
-/* eslint-disable */
 const { totalCols } = config
-
-// Debug later:
-// function test() {}
-// console.log(test)
 
 const update = function(currentLights, time) {
   const colIndex = Math.round(time * 20 % totalCols)

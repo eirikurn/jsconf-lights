@@ -11,6 +11,7 @@ body {
 
 .left {
   flex: 1 0 0;
+  position: relative;
 }
 
 .right {
@@ -32,6 +33,6 @@ body {
   justify-content: center;
 }
 
-:global .CodeMirror {
-  height: 100%;
+:global #brace-editor {
+  position: absolute;
 }
