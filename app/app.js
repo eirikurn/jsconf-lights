@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import Connection from './connection'
-import Lights from './lights'
+import Help from './help'
 import Vis from './vis'
 import Editor from './editor'
 import Compiler from './compiler'
@@ -33,6 +33,7 @@ class App extends Component {
             <Vis />
           </div>
         </div>
+        <Help />
       </div>
     )
   }

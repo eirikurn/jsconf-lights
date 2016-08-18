@@ -1,6 +1,7 @@
 import { Component, PropTypes } from 'react'
 import Context from 'context-eval'
-import { connect } from 'react-redux' 
+import { connect } from 'react-redux'
+import Color from 'color'
 import Lights from './lights'
 import { newScript, syntaxErrors } from './actions'
 import * as config from './config'
@@ -50,17 +51,27 @@ export class Compiler extends Component {
 
     this.evalContext = new Context(this.createSandbox())
 
+    const preparedCode = this.prepareCode(code)
     try {
-      this.evalContext.evaluate(code)
+      this.evalContext.evaluate(preparedCode)
     } catch (error) {
       this.onError(error)
     }
+  }
+
+  prepareCode(code) {
+    // Strict mode fixes strange evaluation issues in Chrome.
+    if (code.indexOf('use strict') !== 0) {
+      return `'use strict'\n${code}`
+    }
+    return code
   }
 
   createSandbox() {
     return {
       config,
       Lights,
+      Color,
       register: this.onRegister,
     }
   }
