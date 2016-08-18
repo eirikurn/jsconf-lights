@@ -1,6 +1,6 @@
 const { totalCols } = config
 
-const update = function(currentLights, time) {
+function update(currentLights, time) {
   const colIndex = Math.round(time * 20 % totalCols)
 
   const newLights = new Lights()
