@@ -14,8 +14,8 @@ export const NEW_LIGHTS = 'NEW_LIGHTS'
  * action creators
  */
 
-export function newCode(code) {
-  return { type: NEW_CODE, code }
+export function newCode(code, errors = []) {
+  return { type: NEW_CODE, code, errors }
 }
 
 export function dirtyCode() {

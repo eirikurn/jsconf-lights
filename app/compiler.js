@@ -8,6 +8,7 @@ import * as config from './config'
 export class Compiler extends Component {
   static propTypes = {
     code: PropTypes.string.isRequired,
+    existingError: PropTypes.object,
     onCompile: PropTypes.func.isRequired,
     onError: PropTypes.func,
   }
@@ -38,20 +39,20 @@ export class Compiler extends Component {
   evalContext = null
 
   evalCode(previousCode) {
-    const { code } = this.props
-    if (code === previousCode) {
+    const { code, existingError } = this.props
+    if (code === previousCode || existingError) {
       return
     }
 
     if (this.evalContext) {
       this.evalContext.destroy()
     }
-    
+
     this.evalContext = new Context(this.createSandbox())
 
     try {
       this.evalContext.evaluate(code)
-    } catch(error) {
+    } catch (error) {
       this.onError(error)
     }
   }
@@ -70,8 +71,9 @@ export class Compiler extends Component {
 }
 
 const ConnectedCompiler = connect(
-    ({ runtime: { code } }) => ({
+    ({ runtime: { code, error } }) => ({
       code,
+      existingError: error,
     }),
     dispatch => ({
       onCompile: script => dispatch(newScript(script)),

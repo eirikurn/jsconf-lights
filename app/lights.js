@@ -55,7 +55,7 @@ class Lights {
             row,
             this.data[colIndex + row * channels + 0],
             this.data[colIndex + row * channels + 1],
-            this.data[colIndex + row * channels + 2],
+            this.data[colIndex + row * channels + 2]
           )
         )
       }

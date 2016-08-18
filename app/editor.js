@@ -13,20 +13,27 @@ export class Editor extends Component {
     value: PropTypes.string,
     onDirty: PropTypes.func,
     onChange: PropTypes.func,
-    onErrors: PropTypes.func,
   }
 
   constructor(props) {
     super(props)
 
     this.state = {
-      value: props.value
+      value: props.value,
     }
   }
 
   componentDidMount() {
     const { editor } = this.refs.ace
-    editor.getSession().$worker.send("changeOptions", [{ asi: true }]);
+    editor.getSession().$worker.call('changeOptions', [{
+      asi: true,
+      globals: {
+        config: false,
+        Lights: false,
+        register: false,
+      },
+      strict: 'implied',
+    }])
   }
 
   debouncedChange = debounce(value => {
@@ -44,11 +51,7 @@ export class Editor extends Component {
         return error
       })
 
-    if (errors.length && onErrors) {
-      onErrors(errors)
-    } else if (errors.length === 0 && onChange) {
-      onChange(value)
-    }
+    onChange(value, errors)
   }, 1000)
 
   onChange = value => {
@@ -81,9 +84,8 @@ const ConnectedEditor = connect(
       value: code,
     }),
     dispatch => ({
-      onChange: code => dispatch(newCode(code)),
+      onChange: (code, errors) => dispatch(newCode(code, errors)),
       onDirty: () => dispatch(dirtyCode()),
-      onErrors: errors => dispatch(syntaxErrors(errors))
     })
 )(Editor)
 

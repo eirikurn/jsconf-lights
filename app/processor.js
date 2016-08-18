@@ -52,18 +52,21 @@ export class Processor extends Component {
     const delta = (now - this.lastUpdate) / 1000
     this.totalTime += delta
     this.lastUpdate = now
+    let nextLights
 
     try {
-      const newLights = script.onUpdate(
+      nextLights = script.onUpdate(
         this.props.lights,
         this.totalTime,
         this.scriptState
       )
-      onChangeLights(newLights)
     } catch (error) {
-      onError(error)
       console.log(error)
+      onError(error)
+      return
     }
+
+    onChangeLights(nextLights)
     this.scheduleUpdate()
   }
 
@@ -85,7 +88,7 @@ const ConnectedProcessor = connect(
     }),
     dispatch => ({
       onChangeLights: lights => dispatch(newLights(lights)),
-      onError: error => dispatch(runtimeErrors([error]))
+      onError: error => dispatch(runtimeErrors([error])),
     }),
     null,
     { withRef: true }

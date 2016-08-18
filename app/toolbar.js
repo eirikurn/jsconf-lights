@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { togglePlay } from './actions'
 import classnames from 'classnames'
@@ -8,28 +8,36 @@ import ReplayIcon from 'react-icons/lib/md/replay'
 import styles from './toolbar.css'
 
 function formatError(error) {
-  return `${error.name}: ${error.message}`
+  return `Syntax error: ${error.message}`
 }
 
 export class Toolbar extends Component {
+  static propTypes = {
+    isPlaying: PropTypes.bool,
+    isDirty: PropTypes.bool,
+    error: PropTypes.object,
+    onTogglePlay: PropTypes.func,
+    onReset: PropTypes.func,
+  }
+
   render() {
-    const { isPlaying, isDirty, syntaxErrors, runtimeErrors, onTogglePlay, onReset } = this.props
-    
+    const { isPlaying, isDirty, error, onTogglePlay, onReset } = this.props
+
     let message = 'Ready'
     if (isPlaying) {
       message = 'Running'
     }
-    if (syntaxErrors.length) {
-      message = formatError(syntaxErrors[0])
+    if (error) {
+      message = formatError(error)
     }
     const toolbarClasses = classnames(
       styles.toolbar,
       {
-        [styles.error]: syntaxErrors.length > 0, 
+        [styles.error]: !!error,
         [styles.dirty]: isDirty,
       }
     )
-    
+
     return (
       <div className={toolbarClasses}>
         <button className={classnames(styles.button, styles.replay)} onClick={onReset}>
@@ -47,9 +55,13 @@ export class Toolbar extends Component {
 }
 
 const ConnectedToolbar = connect(
-    ({ runtime: { isPlaying, isDirty, syntaxErrors, runtimeErrors }}) => ({ isPlaying, syntaxErrors, runtimeErrors}),
+    ({ runtime: { isPlaying, isDirty, error } }) => ({
+      isPlaying,
+      isDirty,
+      error,
+    }),
     dispatch => ({
-      onTogglePlay: () => dispatch(togglePlay())
+      onTogglePlay: () => dispatch(togglePlay()),
     })
 )(Toolbar)
 

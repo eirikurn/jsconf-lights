@@ -13,22 +13,25 @@ function lights(state = new Lights(), action) {
 
 const initialRuntimeState = {
   code: defaultCode,
-  syntaxErrors: [],
   script: null,
-  runtimeErrors: [],
+  error: null,
   wasPlaying: false,
   isPlaying: false,
   isDirty: false,
 }
 function runtime(state = initialRuntimeState, action) {
   switch (action.type) {
-    case NEW_CODE:
+    case NEW_CODE: {
+      const error = action.errors && action.errors[0]
       return {
         ...state,
-        syntaxErrors: [],
+        error: error || null,
         code: action.code,
+        isDirty: false,
+        isPlaying: state.isPlaying && !error,
       }
-    
+    }
+
     case DIRTY_CODE:
       if (!state.isDirty) {
         return {
@@ -41,7 +44,7 @@ function runtime(state = initialRuntimeState, action) {
     case SYNTAX_ERRORS:
       return {
         ...state,
-        syntaxErrors: action.errors,
+        error: action.errors[0],
         isPlaying: false,
       }
 
@@ -49,13 +52,15 @@ function runtime(state = initialRuntimeState, action) {
       return {
         ...state,
         script: action.script,
-        runtimeErrors: [],
+        error: null,
+        isPlaying: state.wasPlaying,
       }
 
     case RUNTIME_ERRORS:
       return {
         ...state,
-        runtimeErrors: state.runtimeErrors.concat(action.errors)
+        error: action.errors[0],
+        isPlaying: false,
       }
 
     case TOGGLE_PLAY:
@@ -66,11 +71,11 @@ function runtime(state = initialRuntimeState, action) {
           wasPlaying: false,
         }
       }
-      if (state.script && state.syntaxErrors.length === 0) {
+      if (state.script && !state.error) {
         return {
           ...state,
           isPlaying: true,
-          wasPlaying: true
+          wasPlaying: true,
         }
       }
       return state
