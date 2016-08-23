@@ -15,7 +15,7 @@ import {
 } from './shared/config'
 
 const lightHeight = 30
-const lightWidth = 15
+const lightWidth = 16
 const whitespace = 4
 const totalWidth = lightHeight * 4 + frontCols * lightWidth + whitespace
 const totalHeight = lightHeight * 4 + Math.max(leftCols, rightCols) * lightWidth + whitespace
@@ -24,7 +24,7 @@ const layout = [
     fromCol: 0,
     toCol: leftCols,
     startX: whitespace,
-    startY: whitespace + lightHeight * 2 + (leftCols - 0.5) * lightWidth,
+    startY: whitespace + lightHeight * 2 + Math.floor((leftCols - 0.5) * lightWidth),
     colX: 0,
     colY: -lightWidth,
     rowX: lightHeight,
@@ -71,7 +71,7 @@ const layout = [
 ]
 const textLayout = {
   x: whitespace + lightHeight * 2 + frontCols * lightWidth / 2,
-  y: whitespace + lightHeight * 2 + whitespace,
+  y: whitespace + lightHeight * 2 + whitespace * 2,
   font: {
     fontSize: 24,
     fontWeight: '100',
