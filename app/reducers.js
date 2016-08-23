@@ -1,7 +1,40 @@
 import { combineReducers } from 'redux'
-import { NEW_CODE, DIRTY_CODE, SYNTAX_ERRORS, NEW_SCRIPT, RUNTIME_ERRORS, TOGGLE_PLAY, NEW_LIGHTS } from './actions'
+import {
+    NEW_CODE, DIRTY_CODE, SYNTAX_ERRORS, NEW_SCRIPT, RUNTIME_ERRORS, TOGGLE_PLAY,
+    NEW_LIGHTS,
+    BACKEND_CONNECT, BACKEND_DISCONNECT, BACKEND_CHANGE
+} from './actions'
 import Lights from './lights'
 import defaultCode from '!raw!./examples/hue' // eslint-disable-line
+import { backendHost } from './shared/config'
+
+const initialBackendState = {
+  host: backendHost,
+  room: '',
+  isConnected: false,
+  shouldConnect: false,
+}
+function backend(state = initialBackendState, action) {
+  switch (action.type) {
+    case BACKEND_CONNECT:
+      return {
+        ...state,
+        isConnected: true,
+      }
+    case BACKEND_DISCONNECT:
+      return {
+        ...state,
+        isConnected: false,
+      }
+    case BACKEND_CHANGE:
+      return {
+        ...state,
+        host: action.host,
+        room: action.room,
+      }
+  }
+  return state
+}
 
 function lights(state = new Lights(), action) {
   switch (action.type) {
@@ -87,6 +120,7 @@ function runtime(state = initialRuntimeState, action) {
 
 const appReducers = combineReducers({
   runtime,
+  backend,
   lights,
 })
 

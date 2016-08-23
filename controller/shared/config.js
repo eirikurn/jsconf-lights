@@ -7,3 +7,4 @@ exports.channels = 3
 exports.totalRows = 2
 exports.fps = 30
 exports.totalChannels = exports.totalRows * exports.totalCols * exports.channels
+exports.backendHost = 'http://localhost:8081'

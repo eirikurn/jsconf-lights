@@ -7,12 +7,11 @@ export class Connection extends Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
     lights: PropTypes.object.isRequired,
-    channel: PropTypes.string.isRequired,
+    room: PropTypes.string.isRequired,
   }
 
-  constructor(props) {
-    super(props)
-    this.socket = io.connect(props.url)
+  componentDidMount() {
+    this.socket = io.connect(this.props.url)
     this.socket.on('connect', this.onConnect)
     this.socket.on('lights', this.onLights)
   }
@@ -21,7 +20,7 @@ export class Connection extends Component {
     // Clear buffer while disconnected
     this.socket.sendBuffer = []
 
-    this.socket.emit('join', this.props.channel)
+    this.socket.emit('join', this.props.room)
   }
 
   onLights = () => {
@@ -41,8 +40,14 @@ export class Connection extends Component {
 }
 
 const ReduxConnection = connect(
-    ({ lights }) => ({
+    ({ lights, backend: { host, room } }) => ({
       lights,
+      url: host,
+      room,
+    }),
+    dispatch => ({
+      onConnect: () => dispatch(backendConnect()),
+      onDisconnect: () => dispatch(backendDisconnect()),
     })
 )(Connection)
 
