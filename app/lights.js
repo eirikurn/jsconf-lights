@@ -3,7 +3,7 @@ import {
   totalCols,
   totalChannels,
   channels,
-} from './config'
+} from './shared/config'
 import parseColor from 'color'
 
 class Lights {

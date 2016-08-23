@@ -1,29 +1,49 @@
+import React, { Component, PropTypes } from 'react'
 import io from 'socket.io-client'
+import { connect } from 'react-redux'
 import Lights from './lights'
 
-class Connection {
-  handlers = []
-  socket = null
-
-  constructor(url) {
-    this.socket = io.connect(url)
-    this.socket.on('lights', this.onReceiveLights)
+export class Connection extends Component {
+  static propTypes = {
+    url: PropTypes.string.isRequired,
+    lights: PropTypes.object.isRequired,
+    channel: PropTypes.string.isRequired,
   }
 
-  onReceiveLights = ({ lights }) => {
-    this.handlers.forEach(handler => handler(new Lights(lights)))
+  constructor(props) {
+    super(props)
+    this.socket = io.connect(props.url)
+    this.socket.on('connect', this.onConnect)
+    this.socket.on('lights', this.onLights)
   }
 
-  addChangeListener(handler) {
-    this.handlers.push(handler)
-    return () => {
-      this.handlers = this.handlers.filter(h => h !== handler)
+  onConnect = () => {
+    // Clear buffer while disconnected
+    this.socket.sendBuffer = []
+
+    this.socket.emit('join', this.props.channel)
+  }
+
+  onLights = () => {
+    console.log('got lights from another client!')
+  }
+
+  componentDidUpdate({ lights: oldLights }) {
+    const { lights } = this.props
+    if (lights !== oldLights) {
+      this.socket.emit('lights', lights.data)
     }
   }
 
-  send(lights) {
-    this.socket.emit('change', { lights })
+  render() {
+    return null
   }
 }
 
-export default Connection
+const ReduxConnection = connect(
+    ({ lights }) => ({
+      lights,
+    })
+)(Connection)
+
+export default ReduxConnection

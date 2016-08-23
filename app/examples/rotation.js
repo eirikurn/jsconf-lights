@@ -4,7 +4,8 @@ function update(currentLights, time) {
   const colIndex = Math.round(time * 20 % totalCols)
 
   const newLights = new Lights()
-  newLights.set(colIndex, [255, 0, 0])
+  const color = Color().hsl(time * 25 % 360, 100, 50)
+  newLights.set(colIndex, color)
 
   return newLights
 }

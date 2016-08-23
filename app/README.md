@@ -7,7 +7,7 @@ crowd of the Hacker Party.
 
 In this editor you can develop and preview your light show.
 
-# Usage
+## Usage
 
 Write code on the left, preview on the right. Your code should register
 an update function that is called 40 times per second and returns a
@@ -20,7 +20,7 @@ return a new Lights object.
 The state object is empty at start but can be used to track state
 across hot reloads.
 
-# Global namespace
+## Global namespace
 
 ```javascript
 class Lights {
@@ -37,6 +37,7 @@ const config = {
   leftCols,
   frontCols,
   rightCols,
+  backCols,
   totalRows,
 }
 ```
@@ -45,3 +46,11 @@ const config = {
 // https://www.npmjs.com/package/color
 const Color = require('color')
 ```
+
+## Light 
+
+There are two rows of lights surrounding the whole court. The constants
+define how many columns are on each wall.
+
+The columns are indexed from left to right on each wall. Going left,
+front, right and back from the audience perspective.

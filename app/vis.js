@@ -10,12 +10,13 @@ import {
   leftCols,
   frontCols,
   rightCols,
-} from './config'
+  backCols,
+} from './shared/config'
 
 const lightHeight = 20
 const lightWidth = 10
 const totalWidth = lightHeight * 4 + frontCols * lightWidth
-const totalHeight = lightHeight * 2 + Math.max(leftCols, rightCols) * lightWidth
+const totalHeight = lightHeight * 4 + Math.max(leftCols, rightCols) * lightWidth
 const layout = [
   {
     fromCol: 0,
@@ -52,6 +53,18 @@ const layout = [
     rowY: 0,
     width: lightHeight,
     height: lightWidth,
+  },
+  {
+    fromCol: leftCols + frontCols + rightCols,
+    toCol: leftCols + frontCols + rightCols + backCols,
+    startX: lightHeight * 2 + frontCols * lightWidth - lightWidth,
+    startY: lightHeight * 3 + rightCols * lightWidth,
+    colX: -lightWidth,
+    colY: 0,
+    rowX: 0,
+    rowY: -lightHeight,
+    width: lightWidth,
+    height: lightHeight,
   },
 ]
 

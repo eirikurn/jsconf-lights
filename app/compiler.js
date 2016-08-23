@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Color from 'color'
 import Lights from './lights'
 import { newScript, syntaxErrors } from './actions'
-import * as config from './config'
+import * as config from './shared/config'
 
 export class Compiler extends Component {
   static propTypes = {
@@ -24,7 +24,7 @@ export class Compiler extends Component {
 
   onRegister = (onUpdate, options) => {
     const script = {
-      fps: 40,
+      fps: 10,
       ...options,
       onUpdate,
     }

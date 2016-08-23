@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-// import Connection from './connection'
+import Connection from './connection'
 import Help from './help'
 import Vis from './vis'
 import Editor from './editor'
@@ -7,8 +7,6 @@ import Compiler from './compiler'
 import Processor from './processor'
 import Toolbar from './toolbar'
 import styles from './app.css'
-
-// const connection = new Connection('http://localhost:8081')
 
 class App extends Component {
   onClickReset = () => {
@@ -21,6 +19,7 @@ class App extends Component {
       <div className={styles.container}>
         <Compiler />
         <Processor ref="processor" />
+        <Connection url="http://localhost:8081" channel="eirikurn" />
 
         <div className={styles.left}>
           <Editor />

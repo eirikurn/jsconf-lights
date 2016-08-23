@@ -1,6 +1,12 @@
 const path = require('path')
+const fs = require('fs')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+var includePaths = [
+  fs.realpathSync(__dirname),
+  fs.realpathSync(__dirname + '/shared'),
+];
 
 module.exports = {
   entry: path.join(__dirname, 'index.js'),
@@ -14,7 +20,8 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        exclude: /(node_modules|createjs)/,
+        include: includePaths,
+        exclude: /(node_modules)/,
         loader: 'babel',
       }, {
         test: /\.css$/,
