@@ -1,6 +1,7 @@
 body {
   background: #222;
   font-family: Roboto, sans-serif;
+  font-weight: 300;
   margin: 0;
 }
 
@@ -21,7 +22,7 @@ body {
 }
 
 .toolbar {
-  flex: 0 0 80px;
+  flex: 0 0 60px;
   position: relative;
   align-self: stretch;
 }

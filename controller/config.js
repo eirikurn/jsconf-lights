@@ -6,5 +6,6 @@ const config = module.exports = Object.assign({
     iface: '2.0.0.1',
     port: 6454,
     host: '2.0.0.5',
+    universe: 1,
   },
 }, sharedConfig)

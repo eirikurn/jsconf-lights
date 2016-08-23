@@ -81,9 +81,9 @@ export class Processor extends Component {
 }
 
 const ConnectedProcessor = connect(
-    ({ runtime: { script, isPlaying }, lights }) => ({
+    ({ runtime: { script, isActuallyPlaying }, lights }) => ({
       script,
-      isPlaying,
+      isPlaying: isActuallyPlaying,
       lights,
     }),
     dispatch => ({

@@ -24,7 +24,7 @@ export class Compiler extends Component {
 
   onRegister = (onUpdate, options) => {
     const script = {
-      fps: 10,
+      fps: config.fps,
       ...options,
       onUpdate,
     }

@@ -5,6 +5,7 @@ import {
   Group,
   Shape,
   Path,
+  Text,
 } from 'react-art'
 import {
   leftCols,
@@ -13,60 +14,70 @@ import {
   backCols,
 } from './shared/config'
 
-const lightHeight = 20
-const lightWidth = 10
-const totalWidth = lightHeight * 4 + frontCols * lightWidth
-const totalHeight = lightHeight * 4 + Math.max(leftCols, rightCols) * lightWidth
+const lightHeight = 30
+const lightWidth = 15
+const whitespace = 4
+const totalWidth = lightHeight * 4 + frontCols * lightWidth + whitespace
+const totalHeight = lightHeight * 4 + Math.max(leftCols, rightCols) * lightWidth + whitespace
 const layout = [
   {
     fromCol: 0,
     toCol: leftCols,
-    startX: 0,
-    startY: lightHeight * 2 + (leftCols - 1) * lightWidth,
+    startX: whitespace,
+    startY: whitespace + lightHeight * 2 + (leftCols - 0.5) * lightWidth,
     colX: 0,
     colY: -lightWidth,
     rowX: lightHeight,
     rowY: 0,
-    width: lightHeight,
-    height: lightWidth,
+    width: lightHeight - whitespace,
+    height: lightWidth - whitespace,
   },
   {
     fromCol: leftCols,
     toCol: leftCols + frontCols,
-    startX: lightHeight * 2,
-    startY: 0,
+    startX: whitespace + lightHeight * 2,
+    startY: whitespace,
     colX: lightWidth,
     colY: 0,
     rowX: 0,
     rowY: lightHeight,
-    width: lightWidth,
-    height: lightHeight,
+    width: lightWidth - whitespace,
+    height: lightHeight - whitespace,
   },
   {
     fromCol: leftCols + frontCols,
     toCol: leftCols + frontCols + rightCols,
-    startX: lightHeight * 3 + frontCols * lightWidth,
-    startY: lightHeight * 2,
+    startX: whitespace + lightHeight * 3 + frontCols * lightWidth,
+    startY: whitespace + lightHeight * 2,
     colX: 0,
     colY: lightWidth,
     rowX: -lightHeight,
     rowY: 0,
-    width: lightHeight,
-    height: lightWidth,
+    width: lightHeight - whitespace,
+    height: lightWidth - whitespace,
   },
   {
     fromCol: leftCols + frontCols + rightCols,
     toCol: leftCols + frontCols + rightCols + backCols,
-    startX: lightHeight * 2 + frontCols * lightWidth - lightWidth,
-    startY: lightHeight * 3 + rightCols * lightWidth,
+    startX: whitespace + lightHeight * 2 + frontCols * lightWidth - lightWidth,
+    startY: whitespace + lightHeight * 3 + rightCols * lightWidth,
     colX: -lightWidth,
     colY: 0,
     rowX: 0,
     rowY: -lightHeight,
-    width: lightWidth,
-    height: lightHeight,
+    width: lightWidth - whitespace,
+    height: lightHeight - whitespace,
   },
 ]
+const textLayout = {
+  x: whitespace + lightHeight * 2 + frontCols * lightWidth / 2,
+  y: whitespace + lightHeight * 2 + whitespace,
+  font: {
+    fontSize: 24,
+    fontWeight: '100',
+    fontFamily: 'Roboto',
+  },
+}
 
 export class Vis extends Component {
   static propTypes = {
@@ -108,7 +119,7 @@ export class Vis extends Component {
   render() {
     const { lights } = this.props
     return (
-      <Surface width={totalWidth} height={totalHeight}>
+      <Surface width={totalWidth} height={totalHeight} style={{ background: 'rgba(255, 255, 255, 0.05)', boxShadow: '0 0 5px rgba(0,0,0,0.5)' }}>
         <Group>
           {lights.mapLights((col, row, r, g, b) =>
             <Shape
@@ -117,6 +128,7 @@ export class Vis extends Component {
               fill={`rgb(${r}, ${g}, ${b})`}
             />
           )}
+          <Text fill="#ccc" font={textLayout.font} x={textLayout.x} y={textLayout.y} alignment="middle">Stage</Text>
         </Group>
       </Surface>
     )

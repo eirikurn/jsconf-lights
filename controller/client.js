@@ -1,4 +1,5 @@
-const artnet = require('./artnet')
+const artnet = require('./raw-artnet')
+const mapLightChannels = require('./mapping')
 
 class Client {
   constructor(socket) {
@@ -20,7 +21,7 @@ class Client {
 
   onLights(lights) {
     this.socket.broadcast.to(this.name).emit('lights', lights)
-    artnet(lights)
+    artnet(mapLightChannels(lights))
   }
   
   onDisconnect() {

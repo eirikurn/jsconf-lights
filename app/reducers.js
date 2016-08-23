@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { NEW_CODE, DIRTY_CODE, SYNTAX_ERRORS, NEW_SCRIPT, RUNTIME_ERRORS, TOGGLE_PLAY, NEW_LIGHTS } from './actions'
 import Lights from './lights'
-import defaultCode from '!raw!./examples/rotation' // eslint-disable-line
+import defaultCode from '!raw!./examples/hue' // eslint-disable-line
 
 function lights(state = new Lights(), action) {
   switch (action.type) {
@@ -28,7 +28,7 @@ function runtime(state = initialRuntimeState, action) {
         error: error || null,
         code: action.code,
         isDirty: false,
-        isPlaying: state.isPlaying && !error,
+        isActuallyPlaying: state.isActuallyPlaying && !error,
       }
     }
 
@@ -45,7 +45,7 @@ function runtime(state = initialRuntimeState, action) {
       return {
         ...state,
         error: action.errors[0],
-        isPlaying: false,
+        isActuallyPlaying: false,
       }
 
     case NEW_SCRIPT:
@@ -53,29 +53,29 @@ function runtime(state = initialRuntimeState, action) {
         ...state,
         script: action.script,
         error: null,
-        isPlaying: state.wasPlaying,
+        isActuallyPlaying: state.isPlaying,
       }
 
     case RUNTIME_ERRORS:
       return {
         ...state,
         error: action.errors[0],
-        isPlaying: false,
+        isActuallyPlaying: false,
       }
 
     case TOGGLE_PLAY:
-      if (state.wasPlaying) {
+      if (state.isPlaying) {
         return {
           ...state,
+          isActuallyPlaying: false,
           isPlaying: false,
-          wasPlaying: false,
         }
       }
       if (state.script && !state.error) {
         return {
           ...state,
+          isActuallyPlaying: true,
           isPlaying: true,
-          wasPlaying: true,
         }
       }
       return state

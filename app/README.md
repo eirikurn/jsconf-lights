@@ -10,7 +10,7 @@ In this editor you can develop and preview your light show.
 ## Usage
 
 Write code on the left, preview on the right. Your code should register
-an update function that is called 40 times per second and returns a
+an update function that is called 30-40 times per second and returns a
 new Lights object.
 
 The update function gets the current lights, a time value (counting
