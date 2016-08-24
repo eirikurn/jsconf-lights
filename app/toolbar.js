@@ -10,7 +10,7 @@ import BackendModal from './backend-modal'
 import styles from './toolbar.css'
 
 function formatError(error) {
-  return `Syntax error: ${error.message}`
+  return `Error: ${error.message}`
 }
 
 export class Toolbar extends Component {

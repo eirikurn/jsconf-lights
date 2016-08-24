@@ -1,6 +1,7 @@
 import { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { newLights, runtimeErrors } from './actions'
+import Lights from './lights'
 
 export class Processor extends Component {
   static propTypes = {
@@ -71,8 +72,10 @@ export class Processor extends Component {
   }
 
   reset() {
+    const { onChangeLights } = this.props
     this.scriptState = {}
     this.totalTime = 0
+    onChangeLights(new Lights())
   }
 
   render() {

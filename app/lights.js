@@ -43,6 +43,9 @@ class Lights {
     if (!colors[0]) {
       throw new Error('Missing color data')
     }
+    if (col < 0 || col >= totalCols) {
+      throw new Error(`Column ${col} out of bounds. 0 <= x < ${totalCols}`)
+    }
     const colIndex = col * totalRows * channels
     for (let row = 0; row < totalRows; row++) {
       const color = colors[row] === undefined ? this.formatColor(colors[0]) : this.formatColor(colors[row])
