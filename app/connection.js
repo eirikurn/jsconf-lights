@@ -8,29 +8,66 @@ export class Connection extends Component {
     url: PropTypes.string.isRequired,
     lights: PropTypes.object.isRequired,
     room: PropTypes.string.isRequired,
+    emitIncomingLights: PropTypes.bool,
   }
 
+  isConnected = false
+  socket = null
+
   componentDidMount() {
-    this.socket = io.connect(this.props.url)
-    this.socket.on('connect', this.onConnect)
-    this.socket.on('lights', this.onLights)
+    this.reconnect()
+  }
+
+  reconnect() {
+    if (this.socket) {
+      this.socket.off('disconnect', this.onDisconnect)
+      this.socket.disconnect()
+
+      this.props.onDisconnect()
+      this.socket = null
+      this.isConnected = false
+    }
+
+    if (this.props.url && this.props.room) {
+      this.socket = io.connect(this.props.url)
+      this.socket.on('connect', this.onConnect)
+      this.socket.on('lights', this.onLights)
+    }
+  }
+
+  joinRoom() {
+    this.socket.emit('join', this.props.room)
   }
 
   onConnect = () => {
     // Clear buffer while disconnected
     this.socket.sendBuffer = []
 
-    this.socket.emit('join', this.props.room)
+    this.joinRoom()
+    this.props.onConnect()
+    this.isConnected = true
+  }
+
+  onDisconnect = () => {
+    this.props.onDisconnect()
+    this.isConnected = false
   }
 
   onLights = () => {
-    console.log('got lights from another client!')
+    if (this.props.emitIncomingLights) {
+      onLights
+    }
   }
 
-  componentDidUpdate({ lights: oldLights }) {
-    const { lights } = this.props
-    if (lights !== oldLights) {
+  componentDidUpdate(oldProps) {
+    const { lights, url, room, isConnected } = this.props
+    if (lights !== oldProps.lights && isConnected) {
       this.socket.emit('lights', lights.data)
+    }
+    if (url !== oldProps.url) {
+      this.reconnect()
+    } else if (room !== oldProps.url) {
+      this.joinRoom()
     }
   }
 
@@ -40,14 +77,16 @@ export class Connection extends Component {
 }
 
 const ReduxConnection = connect(
-    ({ lights, backend: { host, room } }) => ({
+    ({ lights, runtime: { isPlaying }, backend: { host, room } }) => ({
       lights,
       url: host,
       room,
+      emitIncomingLights: !isPlaying,
     }),
     dispatch => ({
       onConnect: () => dispatch(backendConnect()),
       onDisconnect: () => dispatch(backendDisconnect()),
+      onLights: lights => dispatch(),
     })
 )(Connection)
 
