@@ -35,10 +35,8 @@ define(col, 0, 44, frontCols)
 
 // Right wall (East)
 col += frontCols
-define(col, 0, 55, rightCols)
-define(col, 0, 103)
-define(col + 16, 0, 107)
-define(col, 1, 71, rightCols)
+define(col, 0, 56, rightCols)
+define(col, 1, 72, rightCols)
 
 // Back wall (South)
 col += rightCols
@@ -52,7 +50,7 @@ define(col + 9, 1, 104, 3)
  * @returns {Array}
  */
 function mapLightChannels(lights) {
-  const channelData = new Array(3)
+  const channelData = new Array(totalHarpaChannels)
   for (let col = 0; col < totalCols; col++) {
     for (let row = 0; row < totalRows; row++) {
       const unit = lightMap[col * totalRows + row]

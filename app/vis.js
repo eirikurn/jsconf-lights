@@ -24,7 +24,7 @@ const layout = [
     fromCol: 0,
     toCol: leftCols,
     startX: whitespace,
-    startY: whitespace + lightHeight * 2 + Math.floor((leftCols - 0.5) * lightWidth),
+    startY: whitespace + lightHeight * 2 + (leftCols - 1) * lightWidth,
     colX: 0,
     colY: -lightWidth,
     rowX: lightHeight,
