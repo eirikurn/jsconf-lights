@@ -23,6 +23,12 @@ export class Editor extends Component {
     }
   }
 
+  componentWillReceiveProps(newProps) {
+    if (newProps.value !== this.props.value) {
+      this.setState({ value: newProps.value })
+    }
+  }
+
   componentDidMount() {
     const { editor } = this.refs.ace
     editor.getSession().$worker.call('changeOptions', [{

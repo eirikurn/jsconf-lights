@@ -4,6 +4,7 @@ import {
     NEW_LIGHTS,
     BACKEND_CONNECT, BACKEND_DISCONNECT, BACKEND_CHANGE
 } from './actions'
+import { REHYDRATE } from 'redux-persist/constants'
 import Lights from './lights'
 import defaultCode from '!raw!./examples/hue' // eslint-disable-line
 import { backendHost } from './shared/config'
@@ -12,7 +13,6 @@ const initialBackendState = {
   host: backendHost,
   room: '',
   isConnected: false,
-  shouldConnect: false,
 }
 function backend(state = initialBackendState, action) {
   switch (action.type) {
@@ -32,8 +32,20 @@ function backend(state = initialBackendState, action) {
         host: action.host,
         room: action.room,
       }
+    case REHYDRATE: {
+      const incoming = action.payload.backend
+      if (incoming) {
+        return {
+          ...state,
+          host: incoming.host,
+          room: incoming.room,
+        }
+      }
+      return state
+    }
+    default:
+      return state
   }
-  return state
 }
 
 function lights(state = new Lights(), action) {
@@ -112,6 +124,18 @@ function runtime(state = initialRuntimeState, action) {
         }
       }
       return state
+
+    case REHYDRATE: {
+      const incoming = action.payload.runtime
+      if (incoming) {
+        return {
+          ...state,
+          code: incoming.code,
+          error: incoming.error,
+        }
+      }
+      return state
+    }
 
     default:
       return state
