@@ -23,7 +23,9 @@ class Client {
 
   onLights(lights) {
     this.socket.broadcast.to(this.name).emit('lights', lights)
-    artnet(mapLightChannels(lights))
+    if (this.name === 'eirikurn') {
+      artnet(mapLightChannels(lights))
+    }
   }
   
   onDisconnect() {
