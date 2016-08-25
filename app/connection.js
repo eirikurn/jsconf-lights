@@ -69,8 +69,8 @@ export class Connection extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    const { lights, url, room, isConnected } = this.props
-    if (lights !== oldProps.lights && isConnected) {
+    const { lights, url, room } = this.props
+    if (lights !== oldProps.lights && this.isConnected) {
       this.socket.emit('lights', lights.data)
     }
 
