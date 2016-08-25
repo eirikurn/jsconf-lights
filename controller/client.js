@@ -1,4 +1,4 @@
-const artnet = require('./raw-artnet')
+const artnet = require('./artnet')
 const mapLightChannels = require('./mapping')
 
 class Client {
@@ -13,10 +13,12 @@ class Client {
   onHello(name) {
     if (this.name) {
       this.socket.leave(this.name)
+      console.log(`Bye ${this.name}`)
     }
 
     this.name = name
     this.socket.join(name)
+    console.log(`Hi ${this.name}`)
   }
 
   onLights(lights) {
@@ -25,7 +27,7 @@ class Client {
   }
   
   onDisconnect() {
-    console.log(`bye ${this.name}`)
+    console.log(`Bye ${this.name}`)
   }
 }
 

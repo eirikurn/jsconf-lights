@@ -40,7 +40,7 @@ class Lights {
   }
 
   set(col, ...colors) {
-    if (!colors[0]) {
+    if (!colors.some(color => !!color)) {
       throw new Error('Missing color data')
     }
     if (col < 0 || col >= totalCols) {
@@ -58,6 +58,9 @@ class Lights {
   }
 
   formatColor(color) {
+    if (color === null) {
+      return color
+    }
     if (color && color.length === 3) {
       return color
     }

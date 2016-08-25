@@ -37,7 +37,7 @@ ArtNetClient.prototype.close = function(){
 }
 
 
-const { artnet: options } = require('./config')
+const { artnet: options } = require('../config')
 const artnet = new ArtNetClient(options.host, options.port, options.iface)
 
 function send(channels, cb) {

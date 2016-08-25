@@ -1,5 +1,5 @@
 const createArtnet = require('artnet')
-const { artnet: options } = require('./config')
+const { artnet: options } = require('../config')
 
 const artnet = createArtnet(options)
 

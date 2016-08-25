@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import io from 'socket.io-client'
 import { connect } from 'react-redux'
+import { backendConnect, backendDisconnect, newLights } from './actions'
 import Lights from './lights'
 
 export class Connection extends Component {
@@ -18,21 +19,28 @@ export class Connection extends Component {
     this.reconnect()
   }
 
-  reconnect() {
+  disconnect() {
     if (this.socket) {
       this.socket.off('disconnect', this.onDisconnect)
-      this.socket.disconnect()
+      this.socket.close()
 
       this.props.onDisconnect()
       this.socket = null
       this.isConnected = false
     }
+  }
 
+  connect() {
     if (this.props.url && this.props.room) {
       this.socket = io.connect(this.props.url)
       this.socket.on('connect', this.onConnect)
       this.socket.on('lights', this.onLights)
     }
+  }
+
+  reconnect() {
+    this.disconnect()
+    this.connect()
   }
 
   joinRoom() {
@@ -53,9 +61,10 @@ export class Connection extends Component {
     this.isConnected = false
   }
 
-  onLights = () => {
+  onLights = (lights) => {
+    const { onLights } = this.props
     if (this.props.emitIncomingLights) {
-      onLights
+      onLights(new Lights(lights))
     }
   }
 
@@ -64,9 +73,17 @@ export class Connection extends Component {
     if (lights !== oldProps.lights && isConnected) {
       this.socket.emit('lights', lights.data)
     }
-    if (url !== oldProps.url) {
+
+    const wasConfigured = oldProps.url && oldProps.room
+    const isConfigured = url && room
+
+    if (wasConfigured && !isConfigured) {
+      this.disconnect()
+    } else if (!wasConfigured && isConfigured) {
+      this.connect()
+    } else if (isConfigured && oldProps.url !== url) {
       this.reconnect()
-    } else if (room !== oldProps.url) {
+    } else if (isConfigured && oldProps.room !== room && isConnected) {
       this.joinRoom()
     }
   }
@@ -86,7 +103,7 @@ const ReduxConnection = connect(
     dispatch => ({
       onConnect: () => dispatch(backendConnect()),
       onDisconnect: () => dispatch(backendDisconnect()),
-      onLights: lights => dispatch(),
+      onLights: lights => dispatch(newLights(lights)),
     })
 )(Connection)
 
