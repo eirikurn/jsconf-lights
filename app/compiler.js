@@ -61,7 +61,7 @@ export class Compiler extends Component {
 
   prepareCode(code) {
     // Strict mode fixes strange evaluation issues in Chrome.
-    if (code.indexOf('use strict') !== 0) {
+    if (code.indexOf('use strict') < 0) {
       return `'use strict'\n${code}`
     }
     return code
