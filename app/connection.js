@@ -34,7 +34,7 @@ export class Connection extends Component {
     if (this.props.url && this.props.room) {
       this.socket = io.connect(this.props.url)
       this.socket.on('connect', this.onConnect)
-      this.socket.on('lights', this.onLights)
+      this.socket.on('otherLights', this.onLights)
     }
   }
 
@@ -69,7 +69,7 @@ export class Connection extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    const { lights, url, room } = this.props
+    const { lights, url, room, emitIncomingLights } = this.props
     if (lights !== oldProps.lights && this.isConnected) {
       this.socket.emit('lights', lights.data)
     }

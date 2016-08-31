@@ -13,23 +13,23 @@ class Client {
   onHello(name) {
     if (this.name) {
       this.socket.leave(this.name)
-      console.log(`Bye ${this.name}`)
+      console.log(`\nBye ${this.name}`)
     }
 
     this.name = name
     this.socket.join(name)
-    console.log(`Hi ${this.name}`)
+    console.log(`\nHi ${this.name}`)
   }
 
   onLights(lights) {
-    this.socket.broadcast.to(this.name).emit('lights', lights)
+    this.socket.broadcast.to(this.name).emit('otherLights', lights)
     if (this.name === 'eirikurn') {
       artnet(mapLightChannels(lights))
     }
   }
   
   onDisconnect() {
-    console.log(`Bye ${this.name}`)
+    console.log(`\nBye ${this.name}`)
   }
 }
 

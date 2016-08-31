@@ -30,6 +30,7 @@ ArtNetClient.prototype.send = function(universe, data, cb) {
   var data = this.HEADER.concat(this.SEQUENCE).concat(this.PHYSICAL).concat(this.UNIVERSE).concat([length_upper, length_lower]).concat(data)
   var buf = Buffer(data)
   this._socket.send(buf, 0, buf.length, this._port, this._host, cb)
+  process.stdout.write('.')
 }
 
 ArtNetClient.prototype.close = function(){
