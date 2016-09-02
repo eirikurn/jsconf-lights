@@ -19,7 +19,7 @@ class App extends Component {
       <div className={styles.container}>
         <Compiler />
         <Processor ref="processor" />
-        <Connection url="http://localhost:8081" channel="eirikurn" />
+        {/* <Connection url="http://localhost:8081" channel="eirikurn" /> */}
 
         <div className={styles.left}>
           <Editor />

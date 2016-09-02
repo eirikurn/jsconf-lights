@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --host 0.0.0.0 --port 80 --progress --colors --hot",
+    "start": "webpack-dev-server --host 0.0.0.0 --port 8000 --progress --colors --hot",
     "start-ssl": "webpack-dev-server --host 0.0.0.0 --port 443 --https --key certs/privkey1.pem --cert certs/cert1.pem --cacert certs/chain1.pem --progress --colors --hot",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

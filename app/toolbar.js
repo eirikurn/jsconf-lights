@@ -22,7 +22,7 @@ export class Toolbar extends Component {
     onTogglePlay: PropTypes.func,
     onReset: PropTypes.func,
   }
-  
+
   state = {
     modalVisible: false,
   }
@@ -63,10 +63,12 @@ export class Toolbar extends Component {
         <div className={styles.status}>
           {message}
         </div>
+        {/*
         <button className={classnames(styles.button, styles.right)} onClick={this.toggleBackendModal} title="Backend connection">
           <RecordIcon fill={isConnected ? '#006600' : 'rgba(255, 0, 0, 0.36)'} />
         </button>
         <BackendModal isVisible={modalVisible} onClose={this.toggleBackendModal} />
+        */}
       </div>
     )
   }
