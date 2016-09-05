@@ -10,12 +10,12 @@ var includePaths = [
 
 module.exports = {
   entry: path.join(__dirname, 'index.js'),
-  // output: {
-  //   path: outputPath,
-  //   filename: outputFilename,
-  //   publicPath: outputPublicPath,
-  //   chunkFilename: outputChunkFilename,
-  // },
+  output: {
+    path: 'dist',
+    filename: 'app.js',
+    //publicPath: outputPublicPath,
+    //chunkFilename: outputChunkFilename,
+  },
   module: {
     loaders: [
       {

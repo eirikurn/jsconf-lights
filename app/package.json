@@ -6,6 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --host 0.0.0.0 --port 8000 --progress --colors --hot",
     "start-ssl": "webpack-dev-server --host 0.0.0.0 --port 443 --https --key certs/privkey1.pem --cert certs/cert1.pem --cacert certs/chain1.pem --progress --colors --hot",
+    "build": "webpack",
+    "deploy": "surge dist lights.jsconf.is",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
